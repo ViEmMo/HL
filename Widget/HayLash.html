@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Prenotazione trattamento HeyLash</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script>
+    $(document).ready(function(){
+    
+     load_json_data('negozio');
+    
+     function load_json_data(id, parent_id)
+     {
+      var html_code = '';
+      $.getJSON('negozio_tipo_trattamento.json', function(data){
+    
+       html_code += '<option value="">Seleziona '+id+'</option>';
+       $.each(data, function(key, value){
+        if(id == 'negozio')
+        {
+         if(value.parent_id == '0')
+         {
+          html_code += '<option value="'+value.id+'">'+value.name+'</option>';
+         }
+        }
+        else
+        {
+         if(value.parent_id == parent_id)
+         {
+          html_code += '<option value="'+value.id+'">'+value.name+'</option>';
+         }
+        }
+       });
+       $('#'+id).html(html_code);
+      });
+    
+     }
+    
+     $(document).on('change', '#negozio', function(){
+      var negozio_id = $(this).val();
+      if(negozio_id != '')
+      {
+       load_json_data('area', negozio_id);
+      }
+      else
+      {
+       $('#area').html('<option value="">Seleziona area</option>');
+       $('#trattamento').html('<option value="">Seleziona trattamento</option>');
+      }
+     });
+     $(document).on('change', '#area', function(){
+      var area_id = $(this).val();
+      if(area_id != '')
+      {
+       load_json_data('trattamento', area_id);
+      }
+      else
+      {
+       $('#trattamento').html('<option value="">Seleziona trattamento</option>');
+      }
+     });
+    });
+    </script>
+
+
+ </head>
+ <body>
+  <br /><br />
+  <div class="container" style="width:600px;">
+   <h2 align="center">Prenota il tuo trattamento qui</h2><br /><br />
+   <select name="negozio" id="negozio" class="form-control input-lg">
+    <option value="">Seleziona il centro</option>
+   </select>
+   <br />
+   <select name="area" id="area" class="form-control input-lg">
+    <option value="">Seleziona l'area del trattamento</option>
+   </select>
+   <br />
+   <select name="trattamento" id="trattamento" class="form-control input-lg">
+    <option value="">Seleziona il trattamento</option>
+   </select>
+  </div>
+ </body>
+</html>
